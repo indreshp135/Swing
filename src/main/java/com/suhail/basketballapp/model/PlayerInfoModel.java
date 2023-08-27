@@ -1,6 +1,7 @@
 package com.suhail.basketballapp.model;
 
 import java.sql.Connection;
+import java.util.List;
 
 import com.suhail.basketballapp.database.DatabaseConnection;
 
@@ -13,7 +14,7 @@ public class PlayerInfoModel {
     String teamName;
     String photouuid;
 
-     public PlayerInfoModel(String name, int age, double height, int weight, String position) {
+    public PlayerInfoModel(String name, int age, double height, int weight, String position) {
         this.name = name;
         this.age = age;
         this.height = height;
@@ -124,8 +125,8 @@ public class PlayerInfoModel {
     }
 
     public void add() {
-        try{
-            Connection connection = DatabaseConnection.getConnection();
+        try {
+            Connection connection = new DatabaseConnection().getConnection();
             String query = "INSERT INTO Player (playerName, age, height, weight, position, teamName, photoUuid) VALUES (?, ?, ?, ?, ?, ?, ?)";
             var preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, name);
@@ -141,5 +142,26 @@ public class PlayerInfoModel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<String> getPlayersByTeamName(String teamName) {
+        List<String> playerNames = new java.util.ArrayList<>();
+
+        try {
+            Connection connection = new DatabaseConnection().getConnection();
+            String query = "SELECT playerName FROM Player WHERE teamName = ?";
+            var preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, teamName);
+            System.out.println(preparedStatement);
+            var resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                playerNames.add(resultSet.getString("playerName"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return playerNames;
     }
 }

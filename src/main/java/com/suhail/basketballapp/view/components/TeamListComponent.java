@@ -2,7 +2,11 @@ package com.suhail.basketballapp.view.components;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import com.suhail.basketballapp.controller.MainController;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 
 public class TeamListComponent extends JPanel {
@@ -23,14 +27,16 @@ public class TeamListComponent extends JPanel {
     public String date;
     public Integer opponentTeamScore;
     public Integer teamScore;
+    public Integer gameId;
 
     public TeamListComponent(String teamName, String opponentTeamName, String date,
-            Integer opponentTeamScore, Integer teamScore) {
+            Integer opponentTeamScore, Integer teamScore, Integer gameId) {
         this.teamName = teamName;
         this.opponentTeamName = opponentTeamName;
         this.date = date;
         this.opponentTeamScore = opponentTeamScore;
         this.teamScore = teamScore;
+        this.gameId = gameId;
         createPanel();
     }
 
@@ -147,6 +153,9 @@ public class TeamListComponent extends JPanel {
     private JButton addResultsPanel() {
 
         JButton resultsButton = new JButton("Add Results");
+        resultsButton.addActionListener((ActionEvent e) -> {
+            MainController.navigateToAddGameResult(gameId);
+        });
         resultsButton.setPreferredSize(new Dimension(200, 40));
         resultsButton.setBackground(Color.BLUE);
         resultsButton.setForeground(Color.BLACK);

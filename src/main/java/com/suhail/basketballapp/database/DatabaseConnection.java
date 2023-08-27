@@ -7,9 +7,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static Connection connection;
+    private Connection connection;
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         if (connection == null) {
             try {
                 Class.forName("org.sqlite.JDBC");
@@ -36,7 +36,7 @@ public class DatabaseConnection {
         return connection;
     }
 
-    public static void createTables() {
+    public void createTables() {
         try {
             Connection connection = getConnection();
             Statement statement = connection.createStatement();
@@ -93,4 +93,5 @@ public class DatabaseConnection {
             e.printStackTrace();
         }
     }
+
 }

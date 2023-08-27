@@ -52,7 +52,7 @@ public class TeamModel {
         );
         // teamNames.add("Team 1");
         try {
-            Connection connection = DatabaseConnection.getConnection();
+            Connection connection = new DatabaseConnection().getConnection();
             PreparedStatement statement = connection.prepareStatement(toSelectAllTeamNamesQuery());
             ResultSet resultSet = statement.executeQuery();
 

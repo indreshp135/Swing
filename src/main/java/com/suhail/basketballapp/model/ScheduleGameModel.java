@@ -76,7 +76,7 @@ public class ScheduleGameModel {
 
     public void postGameDetails() {
         try {
-            Connection connection = DatabaseConnection.getConnection();
+            Connection connection = new DatabaseConnection().getConnection();
             PreparedStatement statement = connection.prepareStatement(toInsertQuery());
             System.out.println(toInsertQuery());
             statement.execute();

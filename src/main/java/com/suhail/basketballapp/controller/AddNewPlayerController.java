@@ -17,11 +17,26 @@ public class AddNewPlayerController {
 
         addNewPlayerContainer.getSaveButton().addActionListener(e -> {
             PlayerInfoModel playerInfoModel = addNewPlayerContainer.getPlayerInfoModel();
-            playerInfoModel.add();
-            addNewPlayerContainer.saveImage();
-            // show success message
+            if (!validate(playerInfoModel)) {
+                return;
+            }
+            try {
+                playerInfoModel.add();
+                addNewPlayerContainer.saveImage();
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(null, "Player already exists");
+            }
             JOptionPane.showMessageDialog(null, "Player added successfully");
         });
+    }
+
+    private boolean validate(PlayerInfoModel playerInfoModel) {
+        // check if the player name is empty
+        if (playerInfoModel.getName().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Player name cannot be empty");
+            return false;
+        }
+        return true;
     }
 
     public AddNewPlayerContainer getViewPanel() {

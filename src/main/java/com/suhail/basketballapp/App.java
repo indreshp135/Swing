@@ -8,9 +8,9 @@ import javax.swing.*;
 public class App {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            DatabaseConnection.createTables();
-            MainController mainController = new MainController();
-            mainController.getDefaultView();
+            new DatabaseConnection().createTables();
+            MainController.initController();
+            MainController.getDefaultView();
         });
     }
 }
