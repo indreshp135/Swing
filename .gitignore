@@ -1,0 +1,6 @@
+photos/*
+!.gitkeep
+.vscode
+target
+*.sqbpro
+*.db
