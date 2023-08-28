@@ -89,6 +89,7 @@ public class DatabaseConnection {
             statement.executeUpdate(createStatsTable);
 
             statement.close();
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

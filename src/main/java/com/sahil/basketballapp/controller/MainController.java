@@ -136,6 +136,7 @@ public class MainController {
     }
 
     private static void replaceMainPanel(JScrollPane newPanel) {
+        newPanel.setBorder(BorderFactory.createEmptyBorder());
         frame.getContentPane().removeAll();
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(newPanel, BorderLayout.CENTER);

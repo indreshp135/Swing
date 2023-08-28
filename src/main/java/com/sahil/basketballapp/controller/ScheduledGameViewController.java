@@ -12,7 +12,7 @@ public class ScheduledGameViewController {
 
     public ScheduledGameViewController() {
         ArrayList<GameModel> gameResults = GameModel.getAllScheduledGameModel();
-        gameResultsContainer = new GameListContainer(gameResults);
+        gameResultsContainer = new GameListContainer(gameResults, "Scheduled Games");
     }
 
     public JPanel getPanel() {

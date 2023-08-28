@@ -47,12 +47,10 @@ public class TeamModel {
     }
 
     public static List<String> getAllTeamNames() {
-        List<String> teamNames = new ArrayList<>(
-
-        );
-        // teamNames.add("Team 1");
+        List<String> teamNames = new ArrayList<>();
+        Connection connection = null;
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             PreparedStatement statement = connection.prepareStatement(toSelectAllTeamNamesQuery());
             ResultSet resultSet = statement.executeQuery();
 
@@ -64,8 +62,51 @@ public class TeamModel {
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         System.out.println(teamNames);
         return teamNames;
+    }
+
+    // get team info by name
+    public TeamModel getTeamInfoByName(String teamName) {
+        TeamModel teamModel = null;
+        Connection connection = null;
+
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "SELECT * FROM team WHERE teamName = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, teamName);
+            System.out.println(preparedStatement);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String teamName1 = resultSet.getString("teamName");
+                String photoUuid = resultSet.getString("photoUuid");
+                teamModel = new TeamModel(teamName1, photoUuid);
+            }
+            preparedStatement.close();
+            return teamModel;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    ;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

@@ -11,10 +11,10 @@ public class GameResultsController {
     private GameListContainer gameResultsContainer;
     public GameResultsController() {
         ArrayList<GameModel> gameResults = GameModel.getAllPlayedGameModel();
-        gameResultsContainer = new GameListContainer(gameResults);
+        gameResultsContainer = new GameListContainer(gameResults, "Game Results");
     }
 
     public JPanel getPanel() {
         return gameResultsContainer;
-    } 
+    }
 }

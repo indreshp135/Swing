@@ -9,6 +9,8 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 
+import com.sahil.basketballapp.model.StatsModel.PointsModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -18,7 +20,7 @@ import java.text.SimpleDateFormat;
 public class ExtendedRegressionLineChart extends JPanel {
     public static int DAYS_TO_EXTEND = 2;
 
-    public ExtendedRegressionLineChart(String title, List<GameData> gameDataList) {
+    public ExtendedRegressionLineChart(String title, List<PointsModel> gameDataList) {
 
         // Create dataset
         DefaultXYDataset dataset = createDataset(gameDataList, DAYS_TO_EXTEND);
@@ -60,12 +62,12 @@ public class ExtendedRegressionLineChart extends JPanel {
         add(chartPanel);
     }
 
-    private DefaultXYDataset createDataset(List<GameData> gameDataList, int daysToExtend) {
+    private DefaultXYDataset createDataset(List<PointsModel> gameDataList, int daysToExtend) {
         DefaultXYDataset dataset = new DefaultXYDataset();
 
         double[][] series = new double[2][gameDataList.size()];
         for (int i = 0; i < gameDataList.size(); i++) {
-            GameData data = gameDataList.get(i);
+            PointsModel data = gameDataList.get(i);
             series[0][i] = data.getDate().getTime();
             series[1][i] = data.getScore();
         }
@@ -88,40 +90,6 @@ public class ExtendedRegressionLineChart extends JPanel {
         return dataset;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Example game data list
-            List<GameData> gameDataList = List.of(
-                    new GameData(new Date(1234567890000L), 100),
-                    new GameData(new Date(1234667890000L), 120),
-                    new GameData(new Date(1234767890000L), 80),
-                    new GameData(new Date(1234867890000L), 150),
-                    new GameData(new Date(1234967890000L), 110));
-
-            ExtendedRegressionLineChart example = new ExtendedRegressionLineChart("Extended Regression Line Chart",
-                    gameDataList);
-            example.setSize(800, 600);
-            example.setVisible(true);
-        });
-    }
-}
-
-class GameData {
-    private Date date;
-    private int score;
-
-    public GameData(Date date, int score) {
-        this.date = date;
-        this.score = score;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public int getScore() {
-        return score;
-    }
 }
 
 class LinearRegression {

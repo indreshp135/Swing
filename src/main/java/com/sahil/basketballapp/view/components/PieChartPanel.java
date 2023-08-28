@@ -20,16 +20,17 @@ public class PieChartPanel extends JPanel {
         add(chartPanel);
     }
 
-    private PieDataset createDataset(HashMap<String, Integer> playerScores, int opponentScore) {
-        DefaultPieDataset dataset = new DefaultPieDataset();
+    private PieDataset<String> createDataset(HashMap<String, Integer> playerScores, int opponentScore) {
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
         for (Map.Entry<String, Integer> entry : playerScores.entrySet()) {
             dataset.setValue(entry.getKey(), entry.getValue());
         }
         dataset.setValue("Opponent", opponentScore);
         return dataset;
     }
+    
 
-    private JFreeChart createChart(PieDataset dataset) {
+    private JFreeChart createChart(PieDataset<String> dataset) {
         JFreeChart chart = ChartFactory.createPieChart(
                 "Player Scores",
                 dataset,

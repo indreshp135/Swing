@@ -10,10 +10,10 @@ import java.util.ArrayList;
 
 public class GameListContainer extends JPanel {
 
-    public GameListContainer(ArrayList<GameModel> gameResults) {
+    public GameListContainer(ArrayList<GameModel> gameResults, String panelTitle) {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Game Results");
+        JLabel title = new JLabel(panelTitle);
         title.setForeground(Color.BLACK);
         title.setFont(new Font("Arial", Font.BOLD, 20));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);

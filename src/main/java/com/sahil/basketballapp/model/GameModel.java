@@ -133,8 +133,10 @@ public class GameModel {
                 "WHERE matchPlayed = TRUE " +
                 ") g";
 
+        Connection connection = null;
+
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -154,10 +156,18 @@ public class GameModel {
             System.out.println("Successfully fetched game results from database.");
 
             preparedStatement.close();
-            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace(); // Replace with proper logging
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Error fetching game");
+                e.printStackTrace();
+            }
         }
 
         return gameResults;
@@ -173,9 +183,10 @@ public class GameModel {
                 "g.Time " +
                 "FROM Game g " +
                 "WHERE matchPlayed = FALSE";
+        Connection connection = null;
 
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -193,10 +204,19 @@ public class GameModel {
             System.out.println("Successfully fetched game results from database.");
 
             preparedStatement.close();
-            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace(); // Replace with proper logging
+
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return gameResults;
@@ -206,8 +226,9 @@ public class GameModel {
     public static GameModel getGame(Integer gameId) {
         String query = "SELECT * FROM Game WHERE gameID = ?";
         System.out.println(gameId);
+        Connection connection = null;
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, gameId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -220,15 +241,49 @@ public class GameModel {
                 return new GameModel(gameId, teamName, opponentTeamName, date);
             }
             preparedStatement.close();
-            connection.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error fetching game");
 
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
         }
         return new GameModel();
 
+    }
+
+    public void updateScore() {
+        String query = "UPDATE Game SET opponentTeamScore = ?, matchPlayed = TRUE WHERE gameID = ?";
+        Connection connection = null;
+        try {
+            System.out.println("Updating game score: " + opponentTeamScore + " " + gameId);
+            connection = new DatabaseConnection().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, opponentTeamScore);
+            preparedStatement.setInt(2, gameId);
+            preparedStatement.execute();
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

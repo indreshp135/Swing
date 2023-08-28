@@ -1,6 +1,7 @@
 package com.sahil.basketballapp.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,20 +37,20 @@ public class StatsModel {
     private int turnovers;
     private int blocks;
 
-    public class PlayerPointsModel {
+    public class PointsModel {
         private int points;
-        private String date;
+        private Date date;
 
-        public PlayerPointsModel(int points, String date) {
+        public PointsModel(Date date, int points) {
             this.points = points;
             this.date = date;
         }
 
-        public int getPoints() {
+        public int getScore() {
             return points;
         }
 
-        public String getDate() {
+        public Date getDate() {
             return date;
         }
     }
@@ -123,10 +124,18 @@ public class StatsModel {
         this.points = points;
     }
 
+    @Override
+    public String toString() {
+        return "StatsModel [assists=" + assists + ", blocks=" + blocks + ", fga=" + fga + ", fgm=" + fgm + ", gameId="
+                + gameId + ", playerName=" + playerName + ", points=" + points + ", rebounds=" + rebounds
+                + ", steals=" + steals + ", turnovers=" + turnovers + "]";
+    }
+
     // Add Stats to Database
-    public void addStats() {
+    public void save() {
+        Connection connection = null;
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             String query = "INSERT INTO Stats (playerName, gameId, points, assists, rebounds, fgm, fga, steals, turnovers, blocks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, playerName);
@@ -143,13 +152,23 @@ public class StatsModel {
             preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    ;
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public List<PlayerPointsModel> getPlayerPointsModel(String playerName) {
-        List<PlayerPointsModel> playerPointsModelList = new ArrayList<>();
+    public List<PointsModel> getPlayerPointsModel(String playerName) {
+        List<PointsModel> playerPointsModelList = new ArrayList<>();
+        Connection connection = null;
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             String query = "SELECT s.points, g.date FROM Stats s INNER JOIN Game g ON Stats.gameId = Game.gameId WHERE playerName = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, playerName);
@@ -157,16 +176,100 @@ public class StatsModel {
 
             while (resultSet.next()) {
                 int points = resultSet.getInt("points");
-                String date = resultSet.getString("date");
-                PlayerPointsModel playerPointsModel = new PlayerPointsModel(points, date);
+                Date date = resultSet.getDate("date");
+                PointsModel playerPointsModel = new PointsModel(date, points);
                 playerPointsModelList.add(playerPointsModel);
             }
 
             preparedStatement.close();
-
             return playerPointsModelList;
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    ;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public List<StatsModel> getGameStats(int gameId) {
+        List<StatsModel> gameStatsList = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "SELECT * FROM Stats WHERE gameId = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, gameId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String playerName = resultSet.getString("playerName");
+                int points = resultSet.getInt("points");
+                int assists = resultSet.getInt("assists");
+                int rebounds = resultSet.getInt("rebounds");
+                int fgm = resultSet.getInt("fgm");
+                int fga = resultSet.getInt("fga");
+                int steals = resultSet.getInt("steals");
+                int turnovers = resultSet.getInt("turnovers");
+                int blocks = resultSet.getInt("blocks");
+                StatsModel gameStats = new StatsModel(playerName, gameId, points, assists, rebounds, fgm, fga, steals,
+                        turnovers, blocks);
+                gameStatsList.add(gameStats);
+            }
+
+            preparedStatement.close();
+            return gameStatsList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    ;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public List<PointsModel> getTeamStats(String teamName) {
+        List<PointsModel> teamStatsList = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "SELECT s.points, g.date FROM Stats s INNER JOIN Game g ON Stats.gameId = Game.gameId INNER JOIN Team t ON Game.teamName = Team.teamName WHERE t.teamName = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, teamName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int points = resultSet.getInt("points");
+                Date date = resultSet.getDate("date");
+                PointsModel teamPointsModel = new PointsModel(date, points);
+                teamStatsList.add(teamPointsModel);
+            }
+
+            preparedStatement.close();
+            return teamStatsList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    ;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }

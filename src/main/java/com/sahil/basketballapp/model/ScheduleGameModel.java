@@ -75,14 +75,23 @@ public class ScheduleGameModel {
     }
 
     public void postGameDetails() {
+        Connection connection = null;
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             PreparedStatement statement = connection.prepareStatement(toInsertQuery());
             System.out.println(toInsertQuery());
             statement.execute();
             statement.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

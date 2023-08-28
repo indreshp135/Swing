@@ -125,8 +125,9 @@ public class PlayerInfoModel {
     }
 
     public void add() {
+        Connection connection = null;
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             String query = "INSERT INTO Player (playerName, age, height, weight, position, teamName, photoUuid) VALUES (?, ?, ?, ?, ?, ?, ?)";
             var preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, name);
@@ -141,14 +142,23 @@ public class PlayerInfoModel {
             preparedStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static List<String> getPlayersByTeamName(String teamName) {
         List<String> playerNames = new java.util.ArrayList<>();
+        Connection connection = null;
 
         try {
-            Connection connection = new DatabaseConnection().getConnection();
+            connection = new DatabaseConnection().getConnection();
             String query = "SELECT playerName FROM Player WHERE teamName = ?";
             var preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, teamName);
@@ -158,10 +168,60 @@ public class PlayerInfoModel {
             while (resultSet.next()) {
                 playerNames.add(resultSet.getString("playerName"));
             }
+            preparedStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return playerNames;
+    }
+
+    // get player info by name
+    public static PlayerInfoModel getPlayerInfoByName(String playerName) {
+        PlayerInfoModel playerInfoModel = null;
+        Connection connection = null;
+
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "SELECT * FROM Player WHERE playerName = ?";
+            var preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, playerName);
+            System.out.println(preparedStatement);
+            var resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("playerName");
+                int age = resultSet.getInt("age");
+                double height = resultSet.getDouble("height");
+                int weight = resultSet.getInt("weight");
+                String position = resultSet.getString("position");
+                String teamName = resultSet.getString("teamName");
+                String photouuid = resultSet.getString("photoUuid");
+                playerInfoModel = new PlayerInfoModel(name, age, height, weight, position, photouuid, teamName);
+            }
+            preparedStatement.close();
+            return playerInfoModel;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    ;
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return playerInfoModel;
     }
 }
