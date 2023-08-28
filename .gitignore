@@ -1,4 +1,5 @@
 photos/*
+!photos/nopic.jpg
 !.gitkeep
 .vscode
 target
