@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,7 +171,7 @@ public class StatsModel {
         Connection connection = null;
         try {
             connection = new DatabaseConnection().getConnection();
-            String query = "SELECT s.points, g.date FROM Stats s INNER JOIN Game g ON Stats.gameId = Game.gameId WHERE playerName = ?";
+            String query = "SELECT s.points, g.date FROM Stats s INNER JOIN Game g ON s.gameId = g.gameId WHERE s.playerName = ? ORDER BY g.date ASC";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, playerName);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -198,7 +200,7 @@ public class StatsModel {
         return null;
     }
 
-    public List<StatsModel> getGameStats(int gameId) {
+    public static List<StatsModel> getGameStats(int gameId) {
         List<StatsModel> gameStatsList = new ArrayList<>();
         Connection connection = null;
         try {
@@ -245,15 +247,19 @@ public class StatsModel {
         Connection connection = null;
         try {
             connection = new DatabaseConnection().getConnection();
-            String query = "SELECT s.points, g.date FROM Stats s INNER JOIN Game g ON Stats.gameId = Game.gameId INNER JOIN Team t ON Game.teamName = Team.teamName WHERE t.teamName = ?";
+            String query = "SELECT SUM(s.points) as points, g.date FROM Stats s INNER JOIN Game g ON s.gameId = g.gameId INNER JOIN Player p ON s.playerName = p.playerName WHERE p.teamName = ? GROUP BY g.gameId ORDER BY g.date ASC";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, teamName);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
+                System.out.println(resultSet.getInt("points") + " " + resultSet.getString("date"));
                 int points = resultSet.getInt("points");
-                Date date = resultSet.getDate("date");
-                PointsModel teamPointsModel = new PointsModel(date, points);
+                String date = resultSet.getString("date");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate localDate = LocalDate.parse(date, formatter);
+                Date dateFinal = localDate != null ? Date.valueOf(localDate) : null;
+                PointsModel teamPointsModel = new PointsModel(dateFinal, points);
                 teamStatsList.add(teamPointsModel);
             }
 

@@ -14,6 +14,7 @@ public class MainController {
     private static JButton changeThemeButton;
     private static JLabel headingLabel;
     private static JPanel topPanel;
+    private static JPanel footerPanel;
     private static ThemeManager themeManager = new ThemeManager();
 
     private static void updateUI() {
@@ -43,24 +44,21 @@ public class MainController {
             ((JButton) component).setOpaque(false); // Set opaque to false
             ((JButton) component).setBorderPainted(true);
             ((JButton) component).setBackground(Color.WHITE);
-        }
-        else if (component instanceof JTextField || component instanceof JComboBox){
+        } else if (component instanceof JTextField || component instanceof JComboBox) {
 
-        }
-        else if (component instanceof JLabel) {
-            //Check current color 
+        } else if (component instanceof JLabel) {
+            // Check current color
             Color currentColor = ((JLabel) component).getForeground();
-            if (currentColor == Color.WHITE || currentColor == Color.BLACK) {
-                ((JLabel) component).setForeground(theme.getTextColor());
-            } else if (currentColor == Color.RED) {
+            if (currentColor == Color.RED) {
                 ((JLabel) component).setForeground(Color.RED);
             } else if (currentColor == Color.BLUE) {
                 ((JLabel) component).setForeground(Color.GREEN);
             } else if (currentColor == Color.GREEN) {
                 ((JLabel) component).setForeground(Color.BLUE);
+            } else {
+                ((JLabel) component).setForeground(theme.getTextColor());
             }
-        }
-        else if (component instanceof JComponent) {
+        } else if (component instanceof JComponent) {
             ((JComponent) component).setBackground(theme.getBackgroundColor());
             ((JComponent) component).setForeground(theme.getTextColor());
         }
@@ -92,7 +90,15 @@ public class MainController {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(changeThemeButton);
         topPanel.add(buttonPanel, BorderLayout.NORTH);
+
+        footerPanel = new JPanel(new BorderLayout());
+        JLabel footerLabel = new JLabel("Made by Sahil", SwingConstants.CENTER);
+        footerLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        footerPanel.add(footerLabel, BorderLayout.CENTER);
+        footerPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+
         frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(footerPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
@@ -131,8 +137,22 @@ public class MainController {
         replaceMainPanel(scrollPane);
     }
 
+    public static void navigateToPlayerStats(String playerName) {
+        PlayerStatsController playerStatsController = new PlayerStatsController(playerName);
+        JPanel playerStatsPanel = playerStatsController.getViewPanel();
+        JScrollPane scrollPane = new JScrollPane(playerStatsPanel);
+        replaceMainPanel(scrollPane);
+    }
+
+    public static void navigateToTeamStats(String teamName) {
+        TeamStatsController teamStatsController = new TeamStatsController(teamName);
+        JPanel teamStatsPanel = teamStatsController.getViewPanel();
+        JScrollPane scrollPane = new JScrollPane(teamStatsPanel);
+        replaceMainPanel(scrollPane);
+    }
+
     public static void getDefaultView() {
-        navigateToScheduledGames();
+        navigateToTeamStats("Team1");
     }
 
     private static void replaceMainPanel(JScrollPane newPanel) {
@@ -140,6 +160,7 @@ public class MainController {
         frame.getContentPane().removeAll();
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(newPanel, BorderLayout.CENTER);
+        frame.add(footerPanel, BorderLayout.SOUTH);
         frame.revalidate();
         frame.repaint();
     }

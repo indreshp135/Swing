@@ -76,7 +76,7 @@ public class TeamModel {
     }
 
     // get team info by name
-    public TeamModel getTeamInfoByName(String teamName) {
+    public static TeamModel getTeamInfoByName(String teamName) {
         TeamModel teamModel = null;
         Connection connection = null;
 
@@ -92,6 +92,7 @@ public class TeamModel {
                 String teamName1 = resultSet.getString("teamName");
                 String photoUuid = resultSet.getString("photoUuid");
                 teamModel = new TeamModel(teamName1, photoUuid);
+                System.out.println(teamModel.toString());
             }
             preparedStatement.close();
             return teamModel;

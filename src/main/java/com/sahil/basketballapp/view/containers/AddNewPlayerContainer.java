@@ -31,6 +31,7 @@ public class AddNewPlayerContainer extends JPanel {
         JLabel headingLabel = new JLabel("Add New Player");
         headingLabel.setFont(new Font("Arial", Font.BOLD, 24));
         headingLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        headingLabel.setForeground(Color.BLACK);
 
         JPanel topPanel = new JPanel(new GridBagLayout());
 

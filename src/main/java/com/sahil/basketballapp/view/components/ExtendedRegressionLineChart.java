@@ -22,12 +22,14 @@ public class ExtendedRegressionLineChart extends JPanel {
 
     public ExtendedRegressionLineChart(String title, List<PointsModel> gameDataList) {
 
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
+
         // Create dataset
         DefaultXYDataset dataset = createDataset(gameDataList, DAYS_TO_EXTEND);
 
         // Create chart
         JFreeChart chart = ChartFactory.createXYLineChart(
-                "Game Scores Over Time with Extended Regression Line", // Chart title
+                "", // Chart title
                 "Game Date", // X-axis label
                 "Points", // Y-axis label
                 dataset, // Dataset
@@ -56,7 +58,7 @@ public class ExtendedRegressionLineChart extends JPanel {
 
         // Create a ChartPanel
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(800, 600));
+        chartPanel.setPreferredSize(new Dimension(400, 300));
 
         // Add ChartPanel to the JFrame
         add(chartPanel);

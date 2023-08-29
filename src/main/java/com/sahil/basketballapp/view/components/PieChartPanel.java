@@ -12,7 +12,7 @@ import java.util.Map;
 public class PieChartPanel extends JPanel {
 
     public PieChartPanel(HashMap<String, Integer> playerScores, int opponentScore) {
-        PieDataset dataset = createDataset(playerScores, opponentScore);
+        PieDataset<String> dataset = createDataset(playerScores, opponentScore);
         JFreeChart chart = createChart(dataset);
 
         ChartPanel chartPanel = new ChartPanel(chart);
@@ -38,7 +38,7 @@ public class PieChartPanel extends JPanel {
                 true,
                 false);
 
-        PiePlot plot = (PiePlot) chart.getPlot();
+        PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
         plot.setSectionPaint("Opponent", Color.RED);
 
         // Set all player segments to blue
