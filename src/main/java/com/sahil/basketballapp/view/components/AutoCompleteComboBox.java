@@ -11,7 +11,7 @@ public class AutoCompleteComboBox extends JComboBox<String> {
    public AutoCompleteComboBox(final String input[]) {
       super(input);
       setEditor(new BasicComboBoxEditor());
-      setEditable(true);
+      // setEditable(true);
    }
 
    public void setSelectedIndex(int index) {

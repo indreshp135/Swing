@@ -92,6 +92,7 @@ public class MainController {
         frame.setSize(800, 620);
         frame.setLayout(new BorderLayout());
         changeThemeButton = new JPanel();
+        changeThemeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         JLabel bulbLabel = new JLabel("\uD83D\uDCA1");
         bulbLabel.setFont(new Font(null, Font.BOLD, 30));
@@ -104,7 +105,8 @@ public class MainController {
         });
         changeThemeButton.setFont(new Font("Arial", Font.BOLD, 20));
 
-        backButton = new JPanel(); // Create the button
+        backButton = new JPanel();
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         JLabel backLabel = new JLabel("\u21A9");
 
         backButton.addMouseListener(new java.awt.event.MouseAdapter() {

@@ -28,22 +28,7 @@ public class GameModel {
         this.gameId = gameId;
     }
 
-    public GameModel(String teamName, String opponentTeamName, String date,
-            Integer opponentTeamScore, Integer teamScore) {
-        this.teamName = teamName;
-        this.opponentTeamName = opponentTeamName;
-        this.date = date;
-        this.opponentTeamScore = opponentTeamScore;
-        this.teamScore = teamScore;
-    }
-
     public GameModel() {
-    }
-
-    public GameModel(String teamName, String opponentTeamName, String date) {
-        this.teamName = teamName;
-        this.opponentTeamName = opponentTeamName;
-        this.date = date;
     }
 
     public GameModel(Integer GameID, String teamName, String opponentTeamName, String date) {
@@ -120,7 +105,8 @@ public class GameModel {
                 "g.OpponentTeamName, " +
                 "g.OpponentTeamScore, " +
                 "g.Date, " +
-                "g.TeamScore " +
+                "g.TeamScore, " +
+                "g.GameID " +
                 "FROM ( " +
                 "SELECT " +
                 "GameID, " +
@@ -147,8 +133,9 @@ public class GameModel {
                 int opponentTeamScore = resultSet.getInt("OpponentTeamScore");
                 String date = resultSet.getString("Date");
                 int teamScore = resultSet.getInt("TeamScore");
+                int gameId = resultSet.getInt("GameID");
 
-                GameModel gameResult = new GameModel(teamName, opponentTeam, date, opponentTeamScore,
+                GameModel gameResult = new GameModel(gameId, teamName, opponentTeam, date, opponentTeamScore,
                         teamScore);
                 gameResults.add(gameResult);
             }
@@ -260,6 +247,62 @@ public class GameModel {
         }
         return new GameModel();
 
+    }
+
+    public static GameModel getGameWithScore(Integer GameID){
+        String query = "SELECT " +
+                "g.TeamName, " +
+                "g.OpponentTeamName, " +
+                "g.OpponentTeamScore, " +
+                "g.Date, " +
+                "g.TeamScore, " +
+                "g.GameID " +
+                "FROM ( " +
+                "SELECT " +
+                "GameID, " +
+                "TeamName, " +
+                "Date, " +
+                "OpponentTeamName, " +
+                "OpponentTeamScore, " +
+                "(SELECT SUM(points) FROM Stats WHERE GameID = g.GameID) AS TeamScore " +
+                "FROM Game g " +
+                "WHERE matchPlayed = TRUE AND GameID = ? " +
+                ") g " +
+                "ORDER BY g.Date DESC";
+
+        Connection connection = null;
+        try {
+            connection = new DatabaseConnection().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, GameID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String teamName = resultSet.getString("TeamName");
+                String opponentTeamName = resultSet.getString("OpponentTeamName");
+                String date = resultSet.getString("Date");
+                Integer opponentTeamScore = resultSet.getInt("OpponentTeamScore");
+                Integer teamScore = resultSet.getInt("TeamScore");
+
+                return new GameModel(GameID, teamName, opponentTeamName, date, opponentTeamScore, teamScore);
+            }
+            preparedStatement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching game");
+
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
+        }
+        return new GameModel();
     }
 
     public void updateScore() {

@@ -46,13 +46,21 @@ public class TeamListComponent extends JPanel {
     }
 
     public void createPanel() {
-        if(teamName == null || opponentTeamName == null || date == null) {
+        if (teamName == null || opponentTeamName == null || date == null) {
             // Label no game scheduled
             JLabel noGameLabel = new JLabel("No game scheduled");
             noGameLabel.setFont(new Font("Arial", Font.BOLD, 16));
             noGameLabel.setForeground(Color.RED);
             add(noGameLabel);
             return;
+        }
+        if (teamScore != null && opponentTeamScore != null) {
+            // Add click listener to navigate to game result page
+            this.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    NavigationController.navigateToGameStats(gameId);
+                }
+            });
         }
         setLayout(new GridBagLayout());
         setMaximumSize(new Dimension(getMaximumSize().width, 130));

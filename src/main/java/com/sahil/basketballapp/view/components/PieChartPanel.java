@@ -28,45 +28,37 @@ public class PieChartPanel extends JPanel {
         dataset.setValue("Opponent", opponentScore);
         return dataset;
     }
-    
 
     private JFreeChart createChart(PieDataset<String> dataset) {
         JFreeChart chart = ChartFactory.createPieChart(
-                "Player Scores",
+                "Score Breakdown",
                 dataset,
+                true, // Show legend
                 false,
-                true,
-                false);
+                true); // Don't generate tooltips
 
         PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
         plot.setSectionPaint("Opponent", Color.RED);
 
-        // Set all player segments to blue
-        // Set all player segments to blue
+        // Set all player segments to different colors
+        int colorIndex = 0;
         for (Object key : dataset.getKeys()) {
             Comparable<?> comparableKey = (Comparable<?>) key;
             if (!comparableKey.equals("Opponent")) {
-                plot.setSectionPaint(comparableKey, Color.BLUE);
+                Color color = getSegmentColor(colorIndex);
+                plot.setSectionPaint(comparableKey, color);
+                colorIndex++;
             }
         }
 
         return chart;
     }
 
-    public static void main(String[] args) {
-        HashMap<String, Integer> playerScores = new HashMap<>();
-        playerScores.put("Player 1", 50);
-        playerScores.put("Player 2", 30);
-        playerScores.put("Player 3", 20);
-
-        int opponentScore = 70;
-
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Pie Chart Example");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.getContentPane().add(new PieChartPanel(playerScores, opponentScore));
-            frame.pack();
-            frame.setVisible(true);
-        });
+    private Color getSegmentColor(int index) {
+        Color[] colors = {
+            Color.BLUE, Color.GREEN, Color.ORANGE, Color.YELLOW, Color.MAGENTA,
+            Color.CYAN, Color.PINK, Color.DARK_GRAY, Color.LIGHT_GRAY
+        };
+        return colors[index % colors.length];
     }
 }

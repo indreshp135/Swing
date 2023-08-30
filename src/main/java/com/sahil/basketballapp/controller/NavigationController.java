@@ -1,6 +1,5 @@
 package com.sahil.basketballapp.controller;
 
-
 public class NavigationController {
 
     public static void navigateToScheduleGame() {
@@ -42,5 +41,10 @@ public class NavigationController {
     public static void navigateToWelcome() {
         WelcomeController welcomeController = new WelcomeController();
         MainController.replaceMainPanel(welcomeController.getViewPanel(), false);
+    }
+
+    public static void navigateToGameStats(Integer gameID) {
+        GameStatsController gameStatsController = new GameStatsController(gameID);
+        MainController.replaceMainPanel(gameStatsController.getViewPanel());
     }
 }
