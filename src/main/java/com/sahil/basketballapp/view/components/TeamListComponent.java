@@ -3,7 +3,7 @@ package com.sahil.basketballapp.view.components;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import com.sahil.basketballapp.controller.MainController;
+import com.sahil.basketballapp.controller.NavigationController;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,12 +21,18 @@ public class TeamListComponent extends JPanel {
     private static final Border TEAM_PANEL_BORDER = BorderFactory.createEmptyBorder(10, 10, 0, 10);
     private static final Border SCORE_PANEL_BORDER = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 
-    public String teamName;
-    public String opponentTeamName;
-    public String date;
-    public Integer opponentTeamScore;
-    public Integer teamScore;
-    public Integer gameId;
+    private String teamName;
+    private String opponentTeamName;
+    private String date;
+    private Integer opponentTeamScore;
+    private Integer teamScore;
+    private Integer gameId;
+    private boolean noBorder = false;
+
+    public TeamListComponent(String teamName, String opponentTeamName, String date, Integer gameId, boolean noBorder) {
+        this(teamName, opponentTeamName, date, null, null, gameId);
+        this.noBorder = noBorder;
+    }
 
     public TeamListComponent(String teamName, String opponentTeamName, String date,
             Integer opponentTeamScore, Integer teamScore, Integer gameId) {
@@ -43,7 +49,8 @@ public class TeamListComponent extends JPanel {
         setLayout(new GridBagLayout());
         setMaximumSize(new Dimension(getMaximumSize().width, 120));
         setBackground(CARD_BACKGROUND_COLOR);
-        setBorder(CARD_BORDER);
+        if (!this.noBorder)
+            setBorder(CARD_BORDER);
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -135,7 +142,7 @@ public class TeamListComponent extends JPanel {
 
         JButton resultsButton = new JButton("Add Results");
         resultsButton.addActionListener((ActionEvent e) -> {
-            MainController.navigateToAddGameResult(gameId);
+            NavigationController.navigateToAddGameResult(gameId);
         });
         resultsButton.setPreferredSize(new Dimension(200, 40));
         resultsButton.setBackground(Color.BLUE);

@@ -40,9 +40,10 @@ public class AddGameResultController {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Data Entry Error");
             }
-            int option = JOptionPane.showConfirmDialog(null, "Would you like to add another game result?", "Add Game Result", JOptionPane.YES_NO_OPTION);
+            int option = JOptionPane.showConfirmDialog(null, "Would you like to add another game result?",
+                    "Add Game Result", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
-                MainController.navigateToScheduleGame();
+                NavigationController.navigateToScheduledGames();
             } else {
                 MainController.getDefaultView();
             }

@@ -5,3 +5,4 @@ photos/*
 target
 *.sqbpro
 *.db
+.DS_Store

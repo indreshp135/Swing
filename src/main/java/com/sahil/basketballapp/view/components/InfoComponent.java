@@ -17,14 +17,10 @@ public class InfoComponent extends JPanel {
         }
 
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
         setLayout(new BorderLayout());
 
         JLabel imageLabel = new JLabel(imageIcon);
-        imageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        // rounded corners
-        imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         imageLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(imageLabel, BorderLayout.CENTER);
 
