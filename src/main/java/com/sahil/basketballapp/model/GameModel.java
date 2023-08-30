@@ -131,7 +131,8 @@ public class GameModel {
                 "(SELECT SUM(points) FROM Stats WHERE GameID = g.GameID) AS TeamScore " +
                 "FROM Game g " +
                 "WHERE matchPlayed = TRUE " +
-                ") g";
+                ") g " +
+                "ORDER BY g.Date DESC";
 
         Connection connection = null;
 
@@ -182,7 +183,8 @@ public class GameModel {
                 "g.Date, " +
                 "g.Time " +
                 "FROM Game g " +
-                "WHERE matchPlayed = FALSE";
+                "WHERE matchPlayed = FALSE" +
+                " ORDER BY g.Date ASC";
         Connection connection = null;
 
         try {

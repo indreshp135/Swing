@@ -23,7 +23,7 @@ public class PhotoUploaderWithFixedSizeDisplay extends JPanel {
         photoPanel = new JPanel(new GridBagLayout()); // Used to center align the image
         photoLabel = new JLabel();
         try {
-            Image img = ImageIO.read(new File("./photos/nopic.jpg"));
+            Image img = ImageIO.read(new File("./photos/nopic.png"));
             ImageIcon imageIcon = new ImageIcon(img.getScaledInstance(150, 180, Image.SCALE_SMOOTH));
             photoLabel.setIcon(imageIcon);
             photoPanel.add(photoLabel, new GridBagConstraints());
@@ -80,6 +80,6 @@ public class PhotoUploaderWithFixedSizeDisplay extends JPanel {
         if (selectedFile != null) {
             return selectedFile.getName();
         }
-        return "nopic.jpg";
+        return "nopic.png";
     }
 }

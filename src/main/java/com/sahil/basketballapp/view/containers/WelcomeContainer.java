@@ -2,15 +2,35 @@ package com.sahil.basketballapp.view.containers;
 
 import javax.swing.*;
 
+import com.sahil.basketballapp.model.GameModel;
 import com.sahil.basketballapp.view.components.AutoCompleteComboBox;
 import com.sahil.basketballapp.view.components.TeamListComponent;
 
 import java.awt.*;
+import java.util.List;
 
 public class WelcomeContainer extends JPanel {
 
-    public WelcomeContainer() {
+    private List<GameModel> lastThreePlayedGames;
+    private GameModel nextScheduledGame;
+    private List<String> allTeamsNames;
+    private List<String> allPlayersNames;
 
+    private JButton ScheduleGameButton;
+    private JButton AddPlayerButton;
+    private JButton ViewAllUpcomingGamesButton;
+    private JButton PreviousResultsButton;
+    private JButton SearchButton;
+
+    private AutoCompleteComboBox teamComboBox;
+    private AutoCompleteComboBox playerComboBox;
+
+    public WelcomeContainer(List<GameModel> lastThreePlayedGames, GameModel nextScheduledGame,
+            List<String> allTeamsNames, List<String> allPlayersNames) {
+        this.lastThreePlayedGames = lastThreePlayedGames;
+        this.nextScheduledGame = nextScheduledGame;
+        this.allTeamsNames = allTeamsNames;
+        this.allPlayersNames = allPlayersNames;
         JPanel mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints mainGbc = new GridBagConstraints();
         mainGbc.gridx = 0;
@@ -38,15 +58,14 @@ public class WelcomeContainer extends JPanel {
         JPanel leftPanel = new JPanel(new GridBagLayout());
         JPanel rightPanel = new JPanel(new BorderLayout());
         JPanel bottomPanel = new JPanel(new GridLayout(1, 3, 5, 5));
-        TeamListComponent teamListComponent1 = new TeamListComponent("Team 1", "Team 2", "12/12/2020", 10, 20, 1);
-        TeamListComponent teamListComponent2 = new TeamListComponent("Team 1", "Team 2", "12/12/2020", 10, 20, 1);
-        TeamListComponent teamListComponent3 = new TeamListComponent("Team 1", "Team 2", "12/12/2020", 10, 20, 1);
-        teamListComponent1.setPreferredSize(new Dimension(200, 100));
-        teamListComponent2.setPreferredSize(new Dimension(200, 100));
-        teamListComponent3.setPreferredSize(new Dimension(200, 100));
-        bottomPanel.add(teamListComponent1);
-        bottomPanel.add(teamListComponent2);
-        bottomPanel.add(teamListComponent3);
+
+        for (GameModel gameModel : lastThreePlayedGames) {
+            TeamListComponent teamListComponent = new TeamListComponent(gameModel.getTeamName(),
+                    gameModel.getOpponentTeamName(), gameModel.getDate(), gameModel.getTeamScore(),
+                    gameModel.getOpponentTeamScore(), gameModel.getGameId(), true);
+            teamListComponent.setPreferredSize(new Dimension(200, 100));
+            bottomPanel.add(teamListComponent);
+        }
         bottomPanel.setPreferredSize(new Dimension(600, 100));
 
         gbc.gridx = 0;
@@ -66,22 +85,33 @@ public class WelcomeContainer extends JPanel {
         nextGameLabel.setFont(new Font("Arial", Font.BOLD, 16));
         nextGameLabel.setBorder(BorderFactory.createEmptyBorder(15, 5, 5, 5));
         leftTopPanel.add(nextGameLabel, BorderLayout.NORTH);
-        TeamListComponent teamListComponent = new TeamListComponent("Team 1", "Team 2", "12/12/2020", 1, true);
+        TeamListComponent teamListComponent = new TeamListComponent(nextScheduledGame.getTeamName(),
+                nextScheduledGame.getOpponentTeamName(), nextScheduledGame.getDate(), nextScheduledGame.getTeamScore(),
+                nextScheduledGame.getOpponentTeamScore(), nextScheduledGame.getGameId(), false);
         teamListComponent.setPreferredSize(new Dimension(200, 100));
         leftTopPanel.add(teamListComponent, BorderLayout.CENTER);
+        leftTopPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         leftPanel.add(leftTopPanel, gbc);
 
         gbc.gridy = 1;
         JPanel leftBottomPanel = new JPanel(new GridLayout(2, 2, 5, 5));
-        JButton button1 = new JButton("Button 1");
-        JButton button2 = new JButton("Button 2");
-        JButton button3 = new JButton("Button 3");
-        JButton button4 = new JButton("Button 4");
-        leftBottomPanel.add(button1);
-        leftBottomPanel.add(button2);
-        leftBottomPanel.add(button3);
-        leftBottomPanel.add(button4);
+        ScheduleGameButton = new JButton("Schedule a Game");
+        ScheduleGameButton.setPreferredSize(new Dimension(100, 50));
+        leftBottomPanel.add(ScheduleGameButton);
+
+        AddPlayerButton = new JButton("Add new Player");
+        AddPlayerButton.setPreferredSize(new Dimension(100, 50));
+        leftBottomPanel.add(AddPlayerButton);
+
+        ViewAllUpcomingGamesButton = new JButton("Upcoming Games");
+        ViewAllUpcomingGamesButton.setPreferredSize(new Dimension(100, 50));
+        leftBottomPanel.add(ViewAllUpcomingGamesButton);
+
+        PreviousResultsButton = new JButton("Game Results");
+        PreviousResultsButton.setPreferredSize(new Dimension(100, 50));
+        leftBottomPanel.add(PreviousResultsButton);
+
         leftBottomPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         leftPanel.add(leftBottomPanel, gbc);
 
@@ -99,10 +129,13 @@ public class WelcomeContainer extends JPanel {
         teamLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 5));
         teamPanel.add(teamLabel, BorderLayout.NORTH);
 
-        AutoCompleteComboBox comboBox = new AutoCompleteComboBox(new String[] { "Team 1", "Team 2", "Team 3" });
-        comboBox.setPreferredSize(new Dimension(200, 50));
-        comboBox.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-        teamPanel.add(comboBox, BorderLayout.CENTER);
+        // add select at arraylist first position
+        allTeamsNames.add(0, "Select Team");
+
+        teamComboBox = new AutoCompleteComboBox(allTeamsNames.toArray(new String[0]));
+        teamComboBox.setPreferredSize(new Dimension(200, 50));
+        teamComboBox.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
+        teamPanel.add(teamComboBox, BorderLayout.CENTER);
 
         rightContentPanel.add(teamPanel);
 
@@ -117,8 +150,10 @@ public class WelcomeContainer extends JPanel {
         playerLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 5));
         playerPanel.add(playerLabel, BorderLayout.NORTH);
 
-        AutoCompleteComboBox playerComboBox = new AutoCompleteComboBox(
-                new String[] { "Player 1", "Player 2", "Player 3" });
+        // add select at arraylist first position
+        allPlayersNames.add(0, "Select Player");
+
+        playerComboBox = new AutoCompleteComboBox(allPlayersNames.toArray(new String[0]));
         playerComboBox.setPreferredSize(new Dimension(200, 50));
         playerComboBox.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
         playerPanel.add(playerComboBox, BorderLayout.CENTER);
@@ -126,13 +161,12 @@ public class WelcomeContainer extends JPanel {
         rightContentPanel.add(playerPanel);
 
         JPanel searchButtonPanel = new JPanel(new BorderLayout());
-        JButton searchButton = new JButton("Search");
-        searchButton.setPreferredSize(new Dimension(200, 50));
-        searchButtonPanel.add(searchButton, BorderLayout.CENTER);
+        SearchButton = new JButton("Search");
+        SearchButton.setPreferredSize(new Dimension(200, 50));
+        searchButtonPanel.add(SearchButton, BorderLayout.CENTER);
         searchButtonPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
         rightContentPanel.add(searchButtonPanel);
-
 
         rightContentPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         rightContentPanel.setPreferredSize(new Dimension(100, 300));
@@ -145,5 +179,33 @@ public class WelcomeContainer extends JPanel {
         contentPanel.add(bottomPanel, gbc);
 
         return contentPanel;
+    }
+
+    public JButton getScheduleGameButton() {
+        return ScheduleGameButton;
+    }
+
+    public JButton getAddPlayerButton() {
+        return AddPlayerButton;
+    }
+
+    public JButton getViewAllUpcomingGamesButton() {
+        return ViewAllUpcomingGamesButton;
+    }
+
+    public JButton getPreviousResultsButton() {
+        return PreviousResultsButton;
+    }
+
+    public AutoCompleteComboBox getTeamComboBox() {
+        return teamComboBox;
+    }
+
+    public AutoCompleteComboBox getPlayerComboBox() {
+        return playerComboBox;
+    }
+
+    public JButton getSearchButton() {
+        return SearchButton;
     }
 }

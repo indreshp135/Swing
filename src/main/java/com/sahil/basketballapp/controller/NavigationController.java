@@ -41,6 +41,6 @@ public class NavigationController {
 
     public static void navigateToWelcome() {
         WelcomeController welcomeController = new WelcomeController();
-        MainController.replaceMainPanel(welcomeController.getViewPanel());
+        MainController.replaceMainPanel(welcomeController.getViewPanel(), false);
     }
 }

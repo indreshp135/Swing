@@ -27,29 +27,37 @@ public class TeamListComponent extends JPanel {
     private Integer opponentTeamScore;
     private Integer teamScore;
     private Integer gameId;
-    private boolean noBorder = false;
+    private boolean noBorder;
 
     public TeamListComponent(String teamName, String opponentTeamName, String date, Integer gameId, boolean noBorder) {
-        this(teamName, opponentTeamName, date, null, null, gameId);
-        this.noBorder = noBorder;
+        this(teamName, opponentTeamName, date, null, null, gameId, noBorder);
     }
 
     public TeamListComponent(String teamName, String opponentTeamName, String date,
-            Integer opponentTeamScore, Integer teamScore, Integer gameId) {
+            Integer opponentTeamScore, Integer teamScore, Integer gameId, boolean noBorder) {
         this.teamName = teamName;
         this.opponentTeamName = opponentTeamName;
         this.date = date;
         this.opponentTeamScore = opponentTeamScore;
         this.teamScore = teamScore;
         this.gameId = gameId;
+        this.noBorder = noBorder;
         createPanel();
     }
 
     public void createPanel() {
+        if(teamName == null || opponentTeamName == null || date == null) {
+            // Label no game scheduled
+            JLabel noGameLabel = new JLabel("No game scheduled");
+            noGameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+            noGameLabel.setForeground(Color.RED);
+            add(noGameLabel);
+            return;
+        }
         setLayout(new GridBagLayout());
-        setMaximumSize(new Dimension(getMaximumSize().width, 120));
+        setMaximumSize(new Dimension(getMaximumSize().width, 130));
         setBackground(CARD_BACKGROUND_COLOR);
-        if (!this.noBorder)
+        if (noBorder)
             setBorder(CARD_BORDER);
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 

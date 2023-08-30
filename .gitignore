@@ -1,5 +1,7 @@
 photos/*
-!photos/nopic.jpg
+!photos/nopic.png
+!photos/spartans.png
+!photos/wolverines.png
 !.gitkeep
 .vscode
 target

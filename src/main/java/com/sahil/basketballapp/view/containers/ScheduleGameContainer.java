@@ -1,9 +1,10 @@
 package com.sahil.basketballapp.view.containers;
 
+import javax.swing.*;
+
 import com.sahil.basketballapp.model.ScheduleGameModel;
 import com.sahil.basketballapp.view.components.ScheduleGameComponent;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 

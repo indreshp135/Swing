@@ -178,8 +178,10 @@ public class StatsModel {
 
             while (resultSet.next()) {
                 int points = resultSet.getInt("points");
-                Date date = resultSet.getDate("date");
-                PointsModel playerPointsModel = new PointsModel(date, points);
+                String date = resultSet.getString("date");
+                LocalDate localDate = LocalDate.parse(date);
+                Date dateFinal = Date.valueOf(localDate);
+                PointsModel playerPointsModel = new PointsModel(dateFinal, points);
                 playerPointsModelList.add(playerPointsModel);
             }
 

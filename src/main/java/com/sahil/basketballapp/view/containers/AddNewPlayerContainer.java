@@ -1,12 +1,13 @@
 package com.sahil.basketballapp.view.containers;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 import com.sahil.basketballapp.model.PlayerInfoModel;
 import com.sahil.basketballapp.view.components.PhotoUploaderWithFixedSizeDisplay;
 import com.sahil.basketballapp.view.components.PlayerFormComponent;
+
+import java.awt.*;
+import java.util.List;
 
 public class AddNewPlayerContainer extends JPanel {
     private JComboBox<String> teamComboBox;

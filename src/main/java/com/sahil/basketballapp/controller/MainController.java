@@ -5,15 +5,15 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 import com.sahil.basketballapp.model.ThemeManager;
+import com.sahil.basketballapp.model.ThemeManager.Theme;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import com.sahil.basketballapp.model.ThemeManager.Theme;
 
 public class MainController {
 
     private static JFrame frame;
-    private static JButton changeThemeButton;
+    private static JPanel changeThemeButton;
+    private static JPanel backButton;
     private static JLabel headingLabel;
     private static JPanel topPanel;
     private static JPanel footerPanel;
@@ -91,22 +91,39 @@ public class MainController {
         }
         frame.setSize(800, 620);
         frame.setLayout(new BorderLayout());
-        changeThemeButton = new JButton("\uD83D\uDCA1"); // Create the button
-        changeThemeButton.addActionListener((ActionEvent e) -> {
-            themeManager.toggleTheme();
-            updateUI();
+        changeThemeButton = new JPanel();
+
+        JLabel bulbLabel = new JLabel("\uD83D\uDCA1");
+        bulbLabel.setFont(new Font(null, Font.BOLD, 30));
+        changeThemeButton.add(bulbLabel);
+        changeThemeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                themeManager.toggleTheme();
+                updateUI();
+            }
         });
         changeThemeButton.setFont(new Font("Arial", Font.BOLD, 20));
-        changeThemeButton.setPreferredSize(new Dimension(50, 50));
-        topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+        backButton = new JPanel(); // Create the button
+        JLabel backLabel = new JLabel("\u21A9");
+
+        backButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                getDefaultView();
+            }
+        });
+        backLabel.setFont(new Font(null, Font.BOLD, 30));
+        backButton.add(backLabel, BorderLayout.CENTER);
+
+        topPanel = new JPanel(new BorderLayout(0, 0));
         headingLabel = new JLabel("Basketball Management App", SwingConstants.CENTER);
         headingLabel.setFont(new Font("Arial", Font.BOLD, 28));
         topPanel.add(headingLabel, BorderLayout.CENTER);
-        topPanel.add(Box.createHorizontalGlue());
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBounds(0, 0, 50, 50);
         buttonPanel.add(changeThemeButton);
-        topPanel.add(buttonPanel);
+        topPanel.add(buttonPanel, BorderLayout.EAST);
+        topPanel.add(backButton, BorderLayout.WEST);
 
         footerPanel = new JPanel(new BorderLayout());
         JLabel footerLabel = new JLabel("Made with \u2764 by Sahil", SwingConstants.CENTER);
@@ -124,6 +141,20 @@ public class MainController {
         JScrollPane newPanel = new JScrollPane(panel);
         newPanel.setBorder(BorderFactory.createEmptyBorder());
         frame.getContentPane().removeAll();
+        backButton.setVisible(true);
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(newPanel, BorderLayout.CENTER);
+        frame.add(footerPanel, BorderLayout.SOUTH);
+        frame.revalidate();
+        frame.repaint();
+        updateUI();
+    }
+
+    public static void replaceMainPanel(JPanel panel, boolean backRequired) {
+        JScrollPane newPanel = new JScrollPane(panel);
+        newPanel.setBorder(BorderFactory.createEmptyBorder());
+        frame.getContentPane().removeAll();
+        backButton.setVisible(backRequired);
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(newPanel, BorderLayout.CENTER);
         frame.add(footerPanel, BorderLayout.SOUTH);

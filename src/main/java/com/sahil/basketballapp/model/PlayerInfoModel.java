@@ -224,4 +224,36 @@ public class PlayerInfoModel {
 
         return playerInfoModel;
     }
+
+    // Get all players names
+    public static List<String> getAllPlayerNames(){
+        Connection connection = null;
+        List<String> playerNames = new java.util.ArrayList<>();
+
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "SELECT playerName FROM Player";
+            var preparedStatement = connection.prepareStatement(query);
+            var resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                playerNames.add(resultSet.getString("playerName"));
+            }
+            preparedStatement.close();
+            return playerNames;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    ;
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return playerNames;
+    }
 }

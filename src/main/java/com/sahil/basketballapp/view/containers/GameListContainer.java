@@ -36,7 +36,7 @@ public class GameListContainer extends JPanel {
                     result.getDate(),
                     result.getOpponentTeamScore(),
                     result.getTeamScore(),
-                    result.getGameId());
+                    result.getGameId(), true);
 
             add(resultPanel);
             add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing between panels

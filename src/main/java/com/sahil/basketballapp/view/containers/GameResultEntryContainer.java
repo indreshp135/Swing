@@ -3,11 +3,11 @@ package com.sahil.basketballapp.view.containers;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import java.awt.*;
-import java.util.List;
-
 import com.sahil.basketballapp.model.StatsModel;
 import com.sahil.basketballapp.view.components.ScoreComponent;
+
+import java.awt.*;
+import java.util.List;
 
 public class GameResultEntryContainer extends JPanel {
 

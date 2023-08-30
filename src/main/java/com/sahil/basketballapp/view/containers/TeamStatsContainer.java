@@ -3,12 +3,13 @@ package com.sahil.basketballapp.view.containers;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.*;
 
 import com.sahil.basketballapp.model.TeamModel;
 import com.sahil.basketballapp.model.StatsModel.PointsModel;
 import com.sahil.basketballapp.view.components.ExtendedRegressionLineChart;
 import com.sahil.basketballapp.view.components.InfoComponent;
+
+import javax.swing.*;
 
 import java.util.List;
 import java.awt.*;

@@ -3,8 +3,8 @@ package com.sahil.basketballapp.controller;
 import java.util.List;
 
 import com.sahil.basketballapp.model.StatsModel;
-import com.sahil.basketballapp.model.StatsModel.PointsModel;
 import com.sahil.basketballapp.model.TeamModel;
+import com.sahil.basketballapp.model.StatsModel.PointsModel;
 import com.sahil.basketballapp.view.containers.TeamStatsContainer;
 
 public class TeamStatsController {
