@@ -51,9 +51,10 @@ public class ExtendedRegressionLineChart extends JPanel {
         renderer.setSeriesShapesVisible(0, true); // Series index 0
         renderer.setSeriesShape(0, new java.awt.geom.Ellipse2D.Double(-3, -3, 6, 6)); // Adjust point size
         renderer.setSeriesLinesVisible(1, true); // Series index 1 (regression line)
-        renderer.setSeriesStroke(1,
+        renderer.setSeriesStroke(2,
                 new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 2 }, 0)); // Dotted
                                                                                                             // line
+        renderer.setSeriesStroke(1, new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 3 }, 0)); // Dotted
         plot.setRenderer(renderer);
 
         // Create a ChartPanel
@@ -75,6 +76,21 @@ public class ExtendedRegressionLineChart extends JPanel {
         }
 
         dataset.addSeries("Game Scores", series);
+
+        // Calculate the average points
+        double totalPoints = 0;
+        for (PointsModel data : gameDataList) {
+            totalPoints += data.getScore();
+        }
+        double averagePoints = totalPoints / gameDataList.size();
+
+        // Add a line for the average points
+        double[][] averageLine = new double[2][2];
+        averageLine[0][0] = series[0][0];
+        averageLine[0][1] = series[0][series[0].length - 1];
+        averageLine[1][0] = averagePoints;
+        averageLine[1][1] = averagePoints;
+        dataset.addSeries("Average", averageLine);
 
         // Perform linear regression and add regression line
         LinearRegression linearRegression = new LinearRegression(series);

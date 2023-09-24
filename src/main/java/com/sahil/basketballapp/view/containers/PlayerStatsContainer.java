@@ -3,9 +3,11 @@ package com.sahil.basketballapp.view.containers;
 import javax.swing.*;
 
 import com.sahil.basketballapp.model.PlayerInfoModel;
+import com.sahil.basketballapp.model.StatsModel.FullPointsModel;
 import com.sahil.basketballapp.model.StatsModel.PointsModel;
 import com.sahil.basketballapp.view.components.ExtendedRegressionLineChart;
 import com.sahil.basketballapp.view.components.InfoComponent;
+import com.sahil.basketballapp.view.components.PlayerScoreComponent;
 
 import java.util.List;
 import java.awt.*;
@@ -13,8 +15,9 @@ import java.awt.*;
 public class PlayerStatsContainer extends JPanel {
     private InfoComponent infoComponent;
     private ExtendedRegressionLineChart extendedRegressionLineChart;
+    private PlayerScoreComponent scoreComponent;
 
-    public PlayerStatsContainer(PlayerInfoModel player, List<PointsModel> pointsModelList) {
+    public PlayerStatsContainer(PlayerInfoModel player, List<PointsModel> pointsModelList, List<FullPointsModel> scoreData) {
         setLayout(new BorderLayout());
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -65,6 +68,15 @@ public class PlayerStatsContainer extends JPanel {
         gbc.weighty = 1.0;
         gbc.insets = new Insets(10, 10, 10, 10);
         panel.add(bottomPanel, gbc);
+
+        scoreComponent = new PlayerScoreComponent(scoreData);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        panel.add(scoreComponent, gbc);
 
         add(panel, BorderLayout.CENTER);
     }

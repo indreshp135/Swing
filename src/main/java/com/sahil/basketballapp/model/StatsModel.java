@@ -57,6 +57,31 @@ public class StatsModel {
         }
     }
 
+    public class FullPointsModel {
+        public int points;
+        public Date date;
+        public int assists;
+        public int rebounds;
+        public int fgm;
+        public int fga;
+        public int steals;
+        public int turnovers;
+        public int blocks;
+
+        public FullPointsModel(Date date, int points, int assists, int rebounds, int fgm, int fga, int steals,
+                int turnovers, int blocks) {
+            this.points = points;
+            this.date = date;
+            this.assists = assists;
+            this.rebounds = rebounds;
+            this.fgm = fgm;
+            this.fga = fga;
+            this.steals = steals;
+            this.turnovers = turnovers;
+            this.blocks = blocks;
+        }
+    }
+
     public StatsModel(String playerName, int gameId, int points, int assists, int rebounds, int fgm, int fga,
             int steals, int turnovers, int blocks) {
         this.playerName = playerName;
@@ -280,5 +305,74 @@ public class StatsModel {
             }
         }
         return null;
+    }
+
+    public List<FullPointsModel> getStatsOfPlayer(String playerName) {
+
+        List<FullPointsModel> playerStatsList = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "SELECT s.points, g.date, s.assists, s.rebounds, s.fgm, s.fga, s.steals, s.turnovers, s.blocks FROM Stats s INNER JOIN Game g ON s.gameId = g.gameId WHERE s.playerName = ? ORDER BY g.date ASC";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, playerName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                int points = resultSet.getInt("points");
+                String date = resultSet.getString("date");
+                LocalDate localDate = LocalDate.parse(date);
+                Date dateFinal = Date.valueOf(localDate);
+                int assists = resultSet.getInt("assists");
+                int rebounds = resultSet.getInt("rebounds");
+                int fgm = resultSet.getInt("fgm");
+                int fga = resultSet.getInt("fga");
+                int steals = resultSet.getInt("steals");
+                int turnovers = resultSet.getInt("turnovers");
+                int blocks = resultSet.getInt("blocks");
+                FullPointsModel playerPointsModel = new FullPointsModel(dateFinal, points, assists, rebounds, fgm, fga,
+                        steals, turnovers, blocks);
+                playerStatsList.add(playerPointsModel);
+            }
+
+            preparedStatement.close();
+            return playerStatsList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    ;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static void deleteStats(int gameID) {
+        Connection connection = null;
+        try {
+            connection = new DatabaseConnection().getConnection();
+            String query = "DELETE FROM Stats WHERE gameId = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, gameID);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    ;
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

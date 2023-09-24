@@ -174,7 +174,7 @@ public class WelcomeContainer extends JPanel {
 
         contentPanel.add(topPanel, gbc);
         gbc.gridy = 2;
-        bottomPanel.setPreferredSize(new Dimension(600, 140));
+        bottomPanel.setPreferredSize(new Dimension(600, 160));
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         contentPanel.add(bottomPanel, gbc);
 

@@ -14,7 +14,7 @@ public class GameModel {
     private String teamName;
     private String opponentTeamName;
     private String date;
-    private Integer opponentTeamScore;
+    private Integer opponentTeamScore = 0;
     private Integer teamScore;
     private Integer gameId;
 
@@ -226,8 +226,9 @@ public class GameModel {
                 String teamName = resultSet.getString("TeamName");
                 String opponentTeamName = resultSet.getString("OpponentTeamName");
                 String date = resultSet.getString("Date");
+                Integer opponentTeamScore = resultSet.getInt("OpponentTeamScore");
 
-                return new GameModel(gameId, teamName, opponentTeamName, date);
+                return new GameModel(gameId, teamName, opponentTeamName, date, opponentTeamScore, 0);
             }
             preparedStatement.close();
 
@@ -309,7 +310,6 @@ public class GameModel {
         String query = "UPDATE Game SET opponentTeamScore = ?, matchPlayed = TRUE WHERE gameID = ?";
         Connection connection = null;
         try {
-            System.out.println("Updating game score: " + opponentTeamScore + " " + gameId);
             connection = new DatabaseConnection().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, opponentTeamScore);
@@ -326,6 +326,32 @@ public class GameModel {
                     connection.close();
                 }
             } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void deleteGame(Integer gameId) {
+        String query = "DELETE FROM Game WHERE gameID = ?";
+        Connection connection = null;
+        try {
+            System.out.println("Deleting game: " + gameId);
+            connection = new DatabaseConnection().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, gameId);
+            preparedStatement.execute();
+
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+
                 e.printStackTrace();
             }
         }

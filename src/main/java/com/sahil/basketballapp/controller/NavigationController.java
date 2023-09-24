@@ -28,6 +28,11 @@ public class NavigationController {
         MainController.replaceMainPanel(addGameResultController.getViewPanel());
     }
 
+    public static void navigateToEditGameResult(Integer gameId) {
+        EditGameResultController editGameResultController = new EditGameResultController(gameId);
+        MainController.replaceMainPanel(editGameResultController.getViewPanel());
+    }
+
     public static void navigateToPlayerStats(String playerName) {
         PlayerStatsController playerStatsController = new PlayerStatsController(playerName);
         MainController.replaceMainPanel(playerStatsController.getViewPanel());

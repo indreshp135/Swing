@@ -7,17 +7,22 @@ import com.sahil.basketballapp.model.StatsModel;
 import java.awt.Dimension;
 import java.util.List;
 
-public class ScoreComponent extends JPanel {
+public class GameScoreComponent extends JPanel {
 
     private JTable table;
     private JScrollPane scrollPane;
     private int gameID;
 
-    public ScoreComponent(List<String> playerNames, int gameID) {
-        this(playerNames, gameID, true);
+    public GameScoreComponent(List<String> playerNames, int gameID) {
+        this(playerNames, gameID, true, null);
     }
 
-    public ScoreComponent(List<String> playerNames, int gameID, boolean isEditable) {
+    public GameScoreComponent(List<String> playerNames, int gameID, List<StatsModel> scoreData) {
+        this(playerNames, gameID, true, scoreData);
+
+    }
+
+    public GameScoreComponent(List<String> playerNames, int gameID, boolean isEditable, List<StatsModel> scoreData) {
         String[] columnNames = { "Player Name", "Points", "Assists", "Rebounds", "Steals", "Blocks", "Turnovers", "FGM",
                 "FGA" };
 
@@ -27,8 +32,28 @@ public class ScoreComponent extends JPanel {
 
         for (int i = 0; i < playerNames.size(); i++) {
             data[i][0] = playerNames.get(i);
-            for (int j = 1; j < 9; j++) {
-                data[i][j] = 0;
+            if (scoreData != null) {
+                for (StatsModel statsModel : scoreData) {
+                    if (statsModel.getPlayerName().equals(playerNames.get(i))) {
+                        data[i][1] = statsModel.getPoints();
+                        data[i][2] = statsModel.getAssists();
+                        data[i][3] = statsModel.getRebounds();
+                        data[i][4] = statsModel.getSteals();
+                        data[i][5] = statsModel.getBlocks();
+                        data[i][6] = statsModel.getTurnovers();
+                        data[i][7] = statsModel.getFgm();
+                        data[i][8] = statsModel.getFga();
+                    }
+                }
+            } else {
+                data[i][1] = 0;
+                data[i][2] = 0;
+                data[i][3] = 0;
+                data[i][4] = 0;
+                data[i][5] = 0;
+                data[i][6] = 0;
+                data[i][7] = 0;
+                data[i][8] = 0;
             }
         }
 

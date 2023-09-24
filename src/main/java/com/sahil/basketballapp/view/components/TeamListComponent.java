@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.sahil.basketballapp.controller.NavigationController;
+import com.sahil.basketballapp.model.GameModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,6 +21,7 @@ public class TeamListComponent extends JPanel {
     private static final Color DIMMED_TEXT_COLOR = Color.GRAY;
     private static final Border TEAM_PANEL_BORDER = BorderFactory.createEmptyBorder(10, 10, 0, 10);
     private static final Border SCORE_PANEL_BORDER = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+    private JButton deleteButton;
 
     private String teamName;
     private String opponentTeamName;
@@ -27,21 +29,21 @@ public class TeamListComponent extends JPanel {
     private Integer opponentTeamScore;
     private Integer teamScore;
     private Integer gameId;
-    private boolean noBorder;
+    private boolean border;
 
-    public TeamListComponent(String teamName, String opponentTeamName, String date, Integer gameId, boolean noBorder) {
-        this(teamName, opponentTeamName, date, null, null, gameId, noBorder);
+    public TeamListComponent(String teamName, String opponentTeamName, String date, Integer gameId, boolean border) {
+        this(teamName, opponentTeamName, date, null, null, gameId, border);
     }
 
     public TeamListComponent(String teamName, String opponentTeamName, String date,
-            Integer opponentTeamScore, Integer teamScore, Integer gameId, boolean noBorder) {
+            Integer teamScore, Integer opponentTeamScore, Integer gameId, boolean border) {
         this.teamName = teamName;
         this.opponentTeamName = opponentTeamName;
         this.date = date;
         this.opponentTeamScore = opponentTeamScore;
         this.teamScore = teamScore;
         this.gameId = gameId;
-        this.noBorder = noBorder;
+        this.border = border;
         createPanel();
     }
 
@@ -63,9 +65,13 @@ public class TeamListComponent extends JPanel {
             });
         }
         setLayout(new GridBagLayout());
-        setMaximumSize(new Dimension(getMaximumSize().width, 130));
+        int height = 130;
+        if ((teamScore == null || teamScore == 0) && border) {
+            height = 180;
+        }
+        setMaximumSize(new Dimension(getMaximumSize().width, height));
         setBackground(CARD_BACKGROUND_COLOR);
-        if (noBorder)
+        if (border)
             setBorder(CARD_BORDER);
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -154,16 +160,43 @@ public class TeamListComponent extends JPanel {
         return scorePanel;
     }
 
-    private JButton addResultsPanel() {
-
+    private JPanel addResultsPanel() {
+        int rows = 1;
+        if ((teamScore == null || teamScore == 0) && border) {
+            rows = 2;
+        }
+        JPanel resultsPanel = new JPanel(new GridLayout(rows, 1, 5, 5));
         JButton resultsButton = new JButton("Add Results");
         resultsButton.addActionListener((ActionEvent e) -> {
             NavigationController.navigateToAddGameResult(gameId);
         });
+
         resultsButton.setPreferredSize(new Dimension(200, 40));
         resultsButton.setBackground(Color.BLUE);
         resultsButton.setForeground(Color.BLACK);
         resultsButton.setFont(new Font("Arial", Font.BOLD, 16));
-        return resultsButton;
+        resultsPanel.add(resultsButton);
+        if ((teamScore == null || teamScore == 0) && border) {
+            deleteButton = new JButton("Delete Schedule");
+
+            deleteButton.addActionListener((ActionEvent e) -> {
+                // Ask for confirmation
+                int dialogResult = JOptionPane.showConfirmDialog(null,
+                        "Are you sure you want to delete this scheduled game?", "Warning",
+                        JOptionPane.YES_NO_OPTION);
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    GameModel.deleteGame(gameId);
+                }
+                JOptionPane.showMessageDialog(null, "Game deleted successfully");
+
+                NavigationController.navigateToWelcome();
+            });
+
+            deleteButton.setPreferredSize(new Dimension(200, 40));
+            deleteButton.setForeground(Color.RED);
+            deleteButton.setFont(new Font("Arial", Font.BOLD, 16));
+            resultsPanel.add(deleteButton);
+        }
+        return resultsPanel;
     }
 }

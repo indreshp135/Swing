@@ -13,7 +13,6 @@ public class ScheduleGameComponent {
     private JComboBox<String> teamComboBox;
     private JDateChooser dateChooser;
     private JSpinner timeSpinner;
-    private JButton backButton;
     private JButton scheduleButton;
 
     public ScheduleGameComponent(List<String> teamNames) {
@@ -27,7 +26,6 @@ public class ScheduleGameComponent {
         timeSpinner.setEditor(timeEditor);
 
         scheduleButton = new JButton("Schedule Game");
-        backButton = new JButton("Back");
     }
 
     public JPanel getPanel() {
@@ -92,7 +90,6 @@ public class ScheduleGameComponent {
 
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.add(backButton);
 
         panel.add(formPanel, BorderLayout.CENTER);
         panel.add(buttonPanel, BorderLayout.NORTH);
@@ -104,9 +101,6 @@ public class ScheduleGameComponent {
         return scheduleButton;
     }
 
-    public JButton getBackButton() {
-        return backButton;
-    }
 
     public ScheduleGameModel getFormData() {
         ScheduleGameModel model = new ScheduleGameModel();

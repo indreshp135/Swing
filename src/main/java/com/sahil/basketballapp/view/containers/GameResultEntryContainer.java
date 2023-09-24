@@ -4,7 +4,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import com.sahil.basketballapp.model.StatsModel;
-import com.sahil.basketballapp.view.components.ScoreComponent;
+import com.sahil.basketballapp.view.components.GameScoreComponent;
 
 import java.awt.*;
 import java.util.List;
@@ -14,9 +14,8 @@ public class GameResultEntryContainer extends JPanel {
     private JPanel vsPanel;
     private JLabel opponentScoreLabel;
     private JSpinner opponentScoreSpinner;
-    private ScoreComponent resultTableComponent;
+    private GameScoreComponent resultTableComponent;
     private JButton saveButton;
-
 
     private static final Font TEAM_NAME_FONT = new Font("Arial", Font.BOLD, 16);
     private static final Color BLUE_COLOR = Color.BLUE;
@@ -49,6 +48,11 @@ public class GameResultEntryContainer extends JPanel {
 
     public GameResultEntryContainer(Integer gameId, String teamName, String opponentTeamName,
             List<String> teamPlayers) {
+        this(gameId, teamName, opponentTeamName, teamPlayers, null, 0);
+    }
+
+    public GameResultEntryContainer(Integer gameId, String teamName, String opponentTeamName,
+            List<String> teamPlayers, List<StatsModel> scoreData, int opponentScore) {
         setLayout(new BorderLayout());
         JPanel panel = new JPanel(new GridBagLayout());
         JPanel bottomPanel = new JPanel(new GridBagLayout());
@@ -72,7 +76,7 @@ public class GameResultEntryContainer extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         opponentScorePanel.add(opponentScoreLabel);
 
-        opponentScoreSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 999, 1));
+        opponentScoreSpinner = new JSpinner(new SpinnerNumberModel(opponentScore, 0, 999, 1));
         JFormattedTextField opponentScoreTextField = ((JSpinner.DefaultEditor) opponentScoreSpinner.getEditor())
                 .getTextField();
         opponentScoreTextField.setColumns(15);
@@ -80,7 +84,7 @@ public class GameResultEntryContainer extends JPanel {
         opponentScorePanel.add(opponentScoreSpinner);
         bottomPanel.add(opponentScorePanel, gbc);
 
-        resultTableComponent = new ScoreComponent(teamPlayers, gameId);
+        resultTableComponent = new GameScoreComponent(teamPlayers, gameId, scoreData);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
@@ -114,7 +118,7 @@ public class GameResultEntryContainer extends JPanel {
         return opponentScoreSpinner;
     }
 
-    public ScoreComponent getResultTableComponent() {
+    public GameScoreComponent getResultTableComponent() {
         return resultTableComponent;
     }
 

@@ -15,12 +15,12 @@ public class GameStatsController {
 
         HashMap<String, Integer> playerScoreMap = new HashMap<>();
         for (StatsModel statsModel : statsModelList) {
-            playerScoreMap.put(statsModel.getPlayerName() + ": " + statsModel.getPoints(), statsModel.getPoints());
+            playerScoreMap.put(statsModel.getPlayerName(), statsModel.getPoints());
         }
 
         GameModel game = GameModel.getGameWithScore(gameID);
 
-        gameStatsContainer = new GameStatsContainer(game, playerScoreMap);
+        gameStatsContainer = new GameStatsContainer(game, playerScoreMap, statsModelList);
 
     }
 
